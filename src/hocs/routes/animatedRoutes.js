@@ -23,7 +23,7 @@ function AnimateRoutes(){
 
         <Route path="/dashboard" element={<Dashboard/>}/>
         <Route path="/blog" element={<Blog/>}/>
-        <Route path="/blog/:slug" element={<EditPost/>}/>
+        <Route path="/blog/:post_id" element={<EditPost/>}/>
         
     
       </Routes>

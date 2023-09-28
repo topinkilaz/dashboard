@@ -10,7 +10,7 @@ function BlogCardHorizontal({data,index}){
         >
           
           
-            <Link to={`/blog/${data.slug}`}
+            <Link to={`/blog/${data.id}`}
             
               
             onMouseEnter={() => {

@@ -4,7 +4,7 @@ import { Fragment, useEffect, useState } from "react"
 import { Helmet } from "react-helmet-async"
 import { connect } from "react-redux"
 import { Navigate, useNavigate, useParams } from "react-router-dom"
-import { get_author_blog_list, get_author_blog_list_page, get_blog } from "redux/actions/blog/blog"
+import { get_author_blog_list, get_author_blog_list_page, get_blog,get_blog_author } from "redux/actions/blog/blog"
 import { get_categories } from "redux/actions/categories/categories"
 import { PaperClipIcon } from '@heroicons/react/20/solid'
 import { CheckIcon, XMarkIcon } from '@heroicons/react/24/outline'
@@ -21,19 +21,20 @@ function EditPost({
   get_blog,
   isAuthenticated,
   get_categories,
-  categories
+  categories,
+  get_blog_author
 }){
 
     const [open, setOpen] = useState(false)
     const [openDelete, setOpenDelete] = useState(false)
 
   const params =useParams()
-  const slug =params.slug
+  const post_id =params.post_id
   useEffect(()=>{
     window.scrollTo(0,0)
-    get_blog(slug)
+    get_blog_author(post_id)
     categories ? <></>: get_categories()
-  },[slug])
+  },[post_id])
 
   const [updateTitle, setUpdateTitle]=useState(false)
   const [updateSlug, setUpdateSlug]=useState(false)
@@ -103,7 +104,8 @@ const resetStates=()=>{
   
         const formData = new FormData()
         formData.append('title', title)
-        formData.append('slug', slug)
+        formData.append('slug', post&&post.slug)
+        formData.append('post_id', post_id)
         formData.append('new_slug', new_slug)
         formData.append('description', description)
         formData.append('category', category)
@@ -133,12 +135,9 @@ const resetStates=()=>{
 
               if(res.status === 200){
 
-                  if(new_slug!==''){
-                      await get_blog(new_slug)
-                      navigate(-1)
-                  }else{
-                      await get_blog(slug)
-                  }
+                 
+                      await get_blog_author(post_id)
+                  
 
                   setFormData({ 
                       title:'',
@@ -196,7 +195,7 @@ const resetStates=()=>{
     };
 
     const formData = new FormData()
-    formData.append('slug', slug)
+    formData.append('post_id', post_id)
 
     const fetchData = async()=>{
         setLoading(true)
@@ -207,12 +206,9 @@ const resetStates=()=>{
 
             if(res.status === 200){
                 setOpen(false)
-                if(new_slug!==''){
-                    await get_blog(new_slug)
-                    navigate(-1)
-                }else{
-                    await get_blog(slug)
-                }
+               
+                    await get_blog_author(post_id)
+            
 
                 setFormData({ 
                     title:'',
@@ -270,7 +266,7 @@ const onSubmitPublish = e =>{
     };
 
     const formData = new FormData()
-    formData.append('slug', slug)
+    formData.append('post_id', post_id)
 
     const fetchData = async()=>{
         setLoading(true)
@@ -281,12 +277,9 @@ const onSubmitPublish = e =>{
 
             if(res.status === 200){
                 setOpen(false)
-                if(new_slug!==''){
-                    await get_blog(new_slug)
-                    navigate(-1)
-                }else{
-                    await get_blog(slug)
-                }
+            
+                    await get_blog_author(post_id)
+                
 
                 setFormData({ 
                     title:'',
@@ -344,12 +337,12 @@ const onSubmitDelete = e =>{
     };
 
     const formData = new FormData()
-    formData.append('slug', slug)
+    formData.append('post_id', post_id)
 
     const fetchData = async()=>{
         setLoading(true)
         try{
-            const res = await axios.delete(`${process.env.REACT_APP_API_URL}/api/blog/delete/${slug}`,
+            const res = await axios.delete(`${process.env.REACT_APP_API_URL}/api/blog/delete/${post_id}`,
             formData,
             config)
 
@@ -1090,5 +1083,6 @@ const mapStateToProps=state=>({
 
 export default connect(mapStateToProps,{
     get_blog,
-    get_categories
+    get_categories,
+    get_blog_author
 }) (EditPost)
