@@ -136,10 +136,10 @@ const resetStates=()=>{
               if(res.status === 200){
 
                  
-                      await get_blog_author(post_id)
+                await get_blog_author(post_id)
                   
 
-                  setFormData({ 
+                setFormData({ 
                       title:'',
                       new_slug:'',
                       description:'',
@@ -278,7 +278,7 @@ const onSubmitPublish = e =>{
             if(res.status === 200){
                 setOpen(false)
             
-                    await get_blog_author(post_id)
+                await get_blog_author(post_id)
                 
 
                 setFormData({ 
